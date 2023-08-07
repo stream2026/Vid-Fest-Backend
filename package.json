@@ -146,7 +146,7 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "start": "node index.server.js",
+    "start": "nodemon index.server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

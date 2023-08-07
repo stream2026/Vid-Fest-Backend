@@ -453,18 +453,20 @@ const featured = async (req, res) => {
     if (!videos) {
       return res.status(404).json({ message: "Video not found" });
     }
-    const newarr=[];
-  for(let i = 0; i < videos.length; i++) {
-      let obj = videos[i];
-      const date = new Date();
-      date.setDate(date.getDate() - 1);
-      if(obj.createdAt>=date)
-      {
-         newarr.push(obj);
-      }
-  }
-   newarr.sort(GetSortOrder("eval"));
-  return res.json({data:newarr});
+    
+    videos.sort((v1,v2)=>{
+      const now = new Date();
+      const diff1 = (now - v1.createdAt)/(1000*60*60);
+      const diff2 = (now - v2.createdAt)/(1000*60*60);
+      const slope1 = v1.eval/diff1;
+      const slope2 = v2.eval/diff2;
+
+      return slope1 > slope2;
+    })
+    if(videos.length <= 10) {
+      return res.status(200).json({data:videos});
+    }
+    return res.status(200).json({ data : videos.slice(0,10) })
   } 
   catch (error) {
     return res.status(500).json({ message: "Internal server error" });
